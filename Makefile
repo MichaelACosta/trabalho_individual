@@ -1,7 +1,7 @@
 LATEX = pdflatex
 BIBTEX = bibtex
 RM = rm -f
-FILE = exemplo-ti
+FILE = TrabalhoIdividual
 
 all:
 		$(LATEX) $(FILE)
