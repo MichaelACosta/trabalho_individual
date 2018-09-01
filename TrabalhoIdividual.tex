@@ -77,6 +77,8 @@
 
   ...
 
+%---------------------------------------------------------------------------------------------------%
+%---------------------------------------------------------------------------------------------------%
 \chapter{Memória Transacional}
 
 Memória Transacional, ou \emph{Transactional Memory}~(TM), é uma classe de mecanismos de sincronização que fornece uma execução atômica e isolada de alterações em um conjunto de dados compartilhados. Estas estão sendo desenvolvidas para que no futuro tornem-se o principal meio de fazer a sincronização em um programa concorrente, substituindo a sincronização baseada em \emph{locks}~\cite{herlihy06}. As TMs podem ser implementadas em \emph{software} (STM), em \emph{hardware} (HTM) ou ainda em uma versão híbrida de \emph{hardware} e \emph{software}.
@@ -85,7 +87,7 @@ Na programação utilizando STMs, todo o acesso à memória compartilhada é rea
 
 A principal vantagem na programação usando STM é que o programador apenas delimita as seções criticas e não é necessário preocupar-se com a aquisição e liberação de \emph{locks}. Os \emph{locks}, quando utilizados de forma incorreta, podem levar a problemas como \emph{deadlocks}~\cite{bandeira10}.
 
-
+%---------------------------------------------------------------------------------------------------%
 \section{Propriedades}
 
 Transação é uma sequência finita de escritas e leituras na memória executada por uma \emph{thread}~\cite{herlihy93}, e deve satisfazer três propriedades:
@@ -98,7 +100,29 @@ Transação é uma sequência finita de escritas e leituras na memória executad
  \item \textbf{Isolamento}: as transações não interferem nas execuções de outras transações, assim parecendo que elas são executadas serialmente. Uma transação não observa o estado intermediário de outra.
 \end{itemize}
 
+%---------------------------------------------------------------------------------------------------%
+\section{Versionamento de Dados}
 
+O versionamento de dados faz é responsável pelo gerenciamento das versões dos dados. Ele armazena tanto o valor do dado no início de uma transação como também o valor do dado modificado durante a transação, isso para garantir a propriedade de atomicidade~\cite{baldassinTese09}.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=7cm]{Imagens/versionamento.png}
+\caption{Exemplo de versionamento adiantado (a) e atrasado (b). Fonte:~\cite{baldassinTese09}}
+\label{figuraVersionamento}
+\end{figure}
+
+Existem dois tipos de versionamento de dados:
+
+\begin{itemize}
+ \item \textbf{Versionamento Adiantado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(a), o valor modificado durante a transação é armazenado direto na memória e o valor inicial é armazenado em um \emph{undo log}, para que no caso de cancelamento na transação o valor inicial seja restaurado na memória.
+
+ \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} na transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
+\end{itemize}
+
+
+%---------------------------------------------------------------------------------------------------%
+%---------------------------------------------------------------------------------------------------%
 \chapter{Escalonamento de Transações}
 
   ...
