@@ -201,7 +201,7 @@ Versão: \currversion^^J
   \let\@evenfoot\@empty%
   \def\@oddhead{\hspace*{\fill}{\small\thepage}}%
   \def\@evenhead{\hspace*{\fill}{\small\thepage}}%
-} 
+}
 
 \pagestyle{empty}%
 \let\ps@plain\ps@empty
@@ -353,7 +353,7 @@ Versão: \currversion^^J
       \textbf{\@unidade}\\%
       \@ifundefined{@nomecurso}{\@programa}{\textbf{Curso de \@nomecurso}}\\%
       \vskip 1cm%
-      \includegraphics[width=3cm]{ufpelw}
+      \includegraphics[width=3cm]{Imagens/ufpelw}
       \vskip 1cm%
       \textbf{\@documento}\\%
       \vskip 1cm%
@@ -451,7 +451,7 @@ Versão: \currversion^^J
 }
 
 %==============================================================================
-% Ajuste do sumário (nada indentado) 
+% Ajuste do sumário (nada indentado)
 %==============================================================================
 \newlength{\ei@chapnumindent}\setlength{\ei@chapnumindent}{1.8em}
 
@@ -496,7 +496,7 @@ Versão: \currversion^^J
     }
   }{
   \end{list}
-} 
+}
 
 \newenvironment{listofsymbols}[1]{
   \chapter*{\listsymbolname}
@@ -607,22 +607,22 @@ Versão: \currversion^^J
 %==============================================================================
 % Formatação das seções
 %==============================================================================
-\setcounter{secnumdepth}{4} 
+\setcounter{secnumdepth}{4}
 
 \renewcommand{\section}{%
   \@startsection{section}{1}{0pt}{18pt}{9pt}{\reset@font\large\bfseries}
-} 
+}
 
 \renewcommand{\subsection}{%
   \@startsection{subsection}{2}{0pt}{12pt}{6pt}{\reset@font\bfseries}
-} 
+}
 
 \renewcommand{\subsubsection}{%
   \@startsection{subsubsection}{3}{0pt}{12pt}{6pt}{\reset@font\itshape}
-} 
+}
 
 \renewcommand{\paragraph}{%
-  \@startsection{paragraph}{4}{0pt}{12pt}{6pt}{\reset@font} 
+  \@startsection{paragraph}{4}{0pt}{12pt}{6pt}{\reset@font}
 }
 
 \renewcommand{\subparagraph}{%
@@ -710,7 +710,7 @@ Versão: \currversion^^J
 \begin{minipage}{1.8cm}
 \rotatebox{90}{~\parbox{12cm}{%
 \begin{minipage}[c]{1cm}
-\includegraphics[width=\columnwidth]{ufpelw}
+\includegraphics[width=\columnwidth]{Imagens/ufpelw}
 \end{minipage}\hfill
 \begin{minipage}[c]{10.5cm}
 \textbf{\@title} -- \@authora
@@ -725,7 +725,7 @@ Versão: \currversion^^J
 \MakeUppercase{\textbf{\@universidade}}\\%
 \@unidade\\%
 \@ifundefined{@nomecurso}{\@programa}{Curso de \@nomecurso}\\%
-\includegraphics[width=3cm]{ufpel}\\
+\includegraphics[width=3cm]{Imagens/ufpel}\\
 \@documento%
 \end{center}
 }%
@@ -735,9 +735,9 @@ Versão: \currversion^^J
 \fcolorbox{black}{azulufpel}{%
 \parbox[c][2cm]{12cm}{%
 \begin{center}
-\vfill 
+\vfill
 {\color{white}\textbf{\@title}}%
-\vfill 
+\vfill
 \end{center}
 }%
 }%
@@ -807,7 +807,7 @@ Elaborada por \@nomebibliotecario\\
 % definição do quadro
 \def\texufpel@cipwindow{%
 \framebox[140mm]{%
-\begin{minipage}[t]{20mm}% 
+\begin{minipage}[t]{20mm}%
 \vskip .3cm
 \@codigocip
 \end{minipage}%
