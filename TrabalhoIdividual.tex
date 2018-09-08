@@ -120,6 +120,38 @@ Existem dois tipos de versionamento de dados:
  \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} na transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
 \end{itemize}
 
+%---------------------------------------------------------------------------------------------------%
+\section{Detecção de Conflito}
+
+Mecanismos de detecção de conflitos verificam a existência de operações conflitantes durante uma transação. Um conflito ocorre quando duas transações estão acessando um mesmo dado na memória e pelo menos uma das transações está fazendo uma operação de escrita~\cite{baldassinTese09}.
+
+Da mesma forma que o versionamento de dados, a detecção de conflito também pode ser de dois tipos:
+
+\begin{itemize}
+ \item \textbf{Detecção de Conflitos Adiantado}: ocorrem no momento em que duas transações acessam um mesmo dado e uma delas faz uma operação de escrita. Essa operação de escrita é detectada e então uma transação é abortada. Neste tipo de detecção pode ocorrer o problema chamado de \emph{livelock}, quando duas transações ficam cancelando-se, desta forma, a execução do programa não progride. A Figura~\ref{figuradeteccaoadiantado} mostra como é feita a detecção de conflitos adiantado.
+
+ O Caso~1, mostra a execução sem conflitos, onde as duas transações são executadas sem problemas. Já o Caso~2, mostra o que acontece quando ocorre um conflito, onde T1 lê A e logo depois T2 escreve em A, então o conflito é detectado e T1 é abortada, após ser efetivada T2, a transação T1 consegue ler A sem problema de conflito. Por fim o Caso~3 mostra a situação de \emph{livelock}, onde as duas transações tentam ler e escrever em A, assim as duas acabam sempre se abortando.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=6.5cm]{Imagens/conflitoadiantado.png}
+\caption{Detecção de conflitos em modo adiantado. Fonte:~\cite{rigo07}}
+\label{figuradeteccaoadiantado}
+\end{figure}
+
+ \item \textbf{Detecção de Conflitos Atrasado}: Este tipo de detecção de conflito ocorre no final da transação.  Antes da transação ser efetuada, é verificado se ocorreu um conflito. Caso tenha ocorrido, a transação é cancelada, senão é efetivada. Para transações muito grandes não é recomendado este tipo de detecção, pois uma transação grande pode ser abortada várias vezes por transações pequenas, assim gastando tempo de processamento desnecessário, este problema se chama \emph{starvation}. A Figura~\ref{figuradeteccaoatrasado} mostra como é feita a detecção de conflitos atrasado.
+
+ O Caso~1, mostra as transações acessando dados diferentes, não ocasionando conflitos. No Caso~2, T2 lê A que é escrita por T1. A T2 só nota o conflito quando T1 é efetivado. Logo depois de notar o conflito T2 é abortada. No Caso~3 não ocorre nenhum conflito, pois T1 lê A antes de T2 escrever. O Caso~4 mostra a situação em que, após ser cancelada, T1 volta a executar.
+\end{itemize}
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=6.5cm]{Imagens/conflitoatrasado.png}
+\caption{Detecção de conflitos em modo atrasado. Fonte:~\cite{rigo07}}
+\label{figuradeteccaoatrasado}
+\end{figure}
+
+Para solucionar o problema de qual transação continuará executando, quando ocorre um conflito, é utilizado um gerenciador de contenção~\cite{harris10}. O gerenciador de contenção é o responsável por decidir quando e qual transação vai ser abortada, isso para garantir que a execução do programa prossiga sem problemas.
 
 %---------------------------------------------------------------------------------------------------%
 %---------------------------------------------------------------------------------------------------%
