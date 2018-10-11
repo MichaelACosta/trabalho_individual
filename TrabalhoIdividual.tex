@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc} % acentuacao
 \usepackage{graphicx} % para inserir figuras
 \usepackage[T1]{fontenc}
+\usepackage{todo}
 
 \hypersetup{
     hidelinks, % Remove coloração e caixas
@@ -155,9 +156,23 @@ Para solucionar o problema de qual transação continuará executando, quando oc
 
 %---------------------------------------------------------------------------------------------------%
 %---------------------------------------------------------------------------------------------------%
-\chapter{Escalonamento de Transações}
+\chapter{Escalonamento de STM}
 
-  ...
+  A bibliografia de STM apresenta um gama distinta e extensa de estratégias de escalonamento. Estas diferem-se devido as distintas características de aplicações encontradas. Nas quais podem apresentar maior ou menor nível de contenção, diferentes read-sets e write-sets, entre outras características.
+
+  Os algoritmos de escalonamento visam otimizar o tempo de execução. Para isto devem inserir o menor \emph{overhead} possível no código propondo uma estratégia eficiente para as características do problema abordado. Alguns algoritmos estudados como \todo{citar} busca serializar transações conflitantes com a utilização de filas.
+
+  Os escalonadores de STM estudados na bibliografia caracterizam-se por executar o escalonamento em dois níveis distintos. Os dois níveis buscam reduzir o tempo de execução e garantir a execução do programa. Estes escalonamentos de STM são o escalonamento de \emph{threads} e de transações.
+
+  O escalonamento de \emph{threads}, busca executar sua tomada de decisão sobre as \emph{threads} ativas no programa, podendo adicionar mais \emph{threads}, remove-las, ou migra-las entre os \emph{cores}.
+
+  O escalonamento de transações, busca executar sua tomada de decisão sobre as transações do programa, estas podem estar em execução, já terem sido abortadas, ou serem a próxima a executar.
+
+  As tomadas de decisões dos escalonadores citados acima se da a partir de outras características. Estas avaliam de forma diferente os dados para a tomada de decisão e em tempos de execução diferentes, assim como, podem efetuar operações distintas conforme suas premissas de escalonamento.
+
+  Conforma a figura \todo{referenciar}, o trabalho \todo{citar}, caracteriza os escalonadores como ...
+
+  Para cada caracteristica de escalonamento citado acima, existem diferentes tecnicas que serão exploradas e exemplificadas nas subseções abaixo.
 
 \section{Analysis, classification and comparison of scheduling techniques for software transactional memories}
 
