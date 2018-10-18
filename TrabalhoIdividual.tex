@@ -166,13 +166,20 @@ Para solucionar o problema de qual transação continuará executando, quando oc
 
   O escalonamento de transações, busca executar sua tomada de decisão sobre as transações do programa, estas podem estar em execução, já terem sido abortadas, ou serem a próxima a executar.
 
-  As tomadas de decisões dos escalonadores citados acima se da a partir de outras características. Estas avaliam de forma diferente os dados para a tomada de decisão e em tempos de execução diferentes, assim como, podem efetuar operações distintas conforme suas premissas de escalonamento.
+  As tomadas de decisões dos escalonadores citados acima se dá a partir de outras características. Estas avaliam de forma diferente os dados para a tomada de decisão e em tempos de execução diferentes, assim como, podem efetuar operações distintas conforme suas premissas de escalonamento.
 
 \section{Características e Técnicas}
 
-O trabalho \cite{sanzo17}, categoriza as técnicas de escalonamento de STM em ...., esta caracterização é apresentada na Figura~\todo{referenciar}, com objetivo de simplificar a estrutura de escalonamento.
+O trabalho \cite{sanzo17}, classifica as técnicas de escalonamento de STM como, baseadas em heurísticas e baseadas em modelos, esta classificação é apresentada na Figura~\ref{figuraCategoria}, onde cada classe, apresenta técnicas distintas de escalonamento.
 
-Para cada característica de escalonamento citado acima, existem diferentes técnicas que foram exploradas e exemplificadas em~\cite{sanzo17}. As subseções a seguir vão abordar e detalhar estas técnicas assim como seus algoritmos.
+Estas diferentes técnicas apresentadas foram exploradas e exemplificadas no trabalho citado acima. As subseções a seguir vão abordar e detalhar estas técnicas, assim como seus algoritmos.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=6.5cm]{Imagens/categoriasEscalonamento.png}
+\caption{Classificação das técnicas de escalonamento. Fonte:~\cite{sanzo17}}
+\label{figuraCategoria}
+\end{figure}
 
 \subsection{Feedback-Driven Techniques}
 
