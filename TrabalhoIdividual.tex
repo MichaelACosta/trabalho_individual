@@ -189,9 +189,9 @@ As técnicas baseadas em feedback utilizam um sistema de loop fechado para contr
 
 As técnicas baseadas em previsão utilizam probabilidade para tomar a decisão apropriada para sua execução. Essa técnica utiliza um conjunto de dados de um mesmo parâmetro para estimar a probabilidade de execução, assim o escalonador toma a decisão de execução dinamicamente.
 
-\subsection{Reactive Techniques}
+\subsection{Técnicas Reativas}
 
-...
+As técnicas reativas adotam uma estratégia onde o escalonador entra em ação após uma transação ser abortada, isso busca evitar conflitos repetidos. Esta estratégia baseia-se na suposição de que os dados acessados por uma transação abortada tem a possibilidade de serem os mesmos acessados durante sua reexecução, ocasionando novo conflito com a transação ainda em execução.
 
 \subsection{Mixed Heuristic-Based Techniques}
 
