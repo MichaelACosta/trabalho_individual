@@ -193,9 +193,9 @@ As técnicas baseadas em previsão utilizam probabilidade para tomar a decisão 
 
 As técnicas reativas adotam uma estratégia onde o escalonador entra em ação após uma transação ser abortada, isso busca evitar conflitos repetidos. Esta estratégia baseia-se na suposição de que os dados acessados por uma transação abortada tem a possibilidade de serem os mesmos acessados durante sua reexecução, ocasionando novo conflito com a transação ainda em execução.
 
-\subsection{Mixed Heuristic-Based Techniques}
+\subsection{Técnica baseada em Heurística Mista}
 
-...
+As técnicas baseadas em heurísticas mista buscam mesclar as diferentes técnicas comentadas acima, para tirar proveito de diferentes perfis de transações. Assim, o escalonador pode tomar a melhor decisão de execução de acordo com o perfil de execução das transações.
 
 \subsection{Machine Learning-Based Techniques}
 
