@@ -4,6 +4,7 @@
 \usepackage{graphicx} % para inserir figuras
 \usepackage[T1]{fontenc}
 \usepackage{todo}
+\usepackage{amssymb}
 
 \hypersetup{
     hidelinks, % Remove coloração e caixas
@@ -60,6 +61,7 @@
 
 %lista de abreviaturas e siglas
 \begin{listofabbrv}{SPMD}
+        \item[ATS] Adaptive Transactional Scheduling
         \item[STM] Software Transactional Memory
         \item[TM] Transactional Memory
         \item[NUMA] Non-Uniform Memory Access
@@ -183,7 +185,16 @@ Estas diferentes técnicas apresentadas foram exploradas e exemplificadas no tra
 
 \subsection{Técnica baseada em Feedback}
 
-As técnicas baseadas em feedback utilizam um sistema de loop fechado para controle de um sistema dinâmico. Essa técnica utiliza um parâmetro de desempenho que é avaliado pelo escalonador a cada iteração do loop para decidir a ação a ser executada.
+As técnicas baseadas em feedback utilizam um sistema de loop fechado para controle de um sistema dinâmico. Essa técnica utiliza um parâmetro de desempenho que é avaliado pelo escalonador a cada iteração do loop para decidir a ação a ser executada, um exemplo de escalonador baseado em feedback é denominado \emph{Adaptive Transactional Scheduling} (ATS).
+
+O escalonador ATS, apresentado em \cite{yoo08}, tem como objetivo otimizar a execução de código e reduzir o número de conflitos por meio da serialização das transações conflitantes. Para serializar as transações o escalonador utiliza uma fila de compartilhamento global.
+
+O escalonador toma a decisão de serializar ou não uma transação conflitante utilizando um parâmetro de feedback denominado \emph{Contention Intensity} (CI). Cada \emph{thread} em execução possui um CI, que é calculado individualmente por uma média dinâmica, este cálculo é efetuado quando uma transação é anulada ou confirmada. A função que calcula o CI é: $CI = \alpha * CIprev + (1 - \alpha) * CC$.
+
+Onde $CIprev$ é o valor anterior a $CI$, $CC$ é igual a 0 se a transação for anulada e igual a 1 se a transação for confirmada, $\alpha$ possui um valor entre 0 e 1, e afeta o peso histórico das transações do \emph{thread}.
+
+Quando um $CI$ ultrapassa o limite previamente definido, o escalonador toma a decisão de serializar as transações executadas por este \emph{thread} em relação às transações executadas por outro \emph{thread}, inserindo então as transações na fila de compartilhamento global.
+
 
 \subsection{Técnica baseada em Previsão}
 
