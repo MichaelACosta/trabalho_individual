@@ -198,7 +198,18 @@ Quando um $CI$ ultrapassa o limite previamente definido, o escalonador toma a de
 
 \subsection{Técnica baseada em Previsão}
 
-As técnicas baseadas em previsão utilizam probabilidade para tomar a decisão apropriada para sua execução. Essa técnica utiliza um conjunto de dados de um mesmo parâmetro para estimar a probabilidade de execução, assim o escalonador toma a decisão de execução dinamicamente.
+As técnicas baseadas em previsão utilizam probabilidade para tomar a decisão apropriada para sua execução. Essa técnica utiliza um conjunto de dados de um mesmo parâmetro para estimar a probabilidade de execução, assim o escalonador toma a decisão de execução dinamicamente. Um exemplo de escalonador baseado em previsão é denominado \emph{Shrink}.
+
+O escalonador \emph{Shrink}, apresentado em \cite{dragojevic09}, utiliza a suposição de localidade temporal e serializa as transações se os conjuntos de dados previstos mostrarem que um conflito pode ocorrer.
+
+Para isto, é utilizado como base, os dados lidos pelas n transações executadas por um \emph{thread}. Este conjunto de leitura de uma transação utiliza o valor n como uma janela de localidade.
+
+Assim, se um item de dados tiver sido lido pela transação anterior, é incrementado, com uma constante de confiança (CI), o parâmetro confiança (C). Se este ultrapassar o limite de confiança estipulado, o item de dados é adicionado ao conjunto de leitura previsto.
+
+O conjunto de gravação é previsto apenas para reiniciar as transações, presumindo-se que este inclua dados pertencentes ao conjunto de gravação da última transação anulada.
+
+Visando reduzir o \emph{overhead} de execução, o escalonador \emph{Shrink} entra em ação para um \emph{thread} apenas quando sua taxa de sucesso de transação está abaixo de um limite de sucesso.
+
 
 \subsection{Técnicas Reativas}
 
