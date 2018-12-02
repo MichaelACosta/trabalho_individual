@@ -225,7 +225,13 @@ O \emph{CAR-STM} também possui a opção de escalonamento proativo, onde o esca
 
 \subsection{Técnica baseada em Heurística Mista}
 
-As técnicas baseadas em heurísticas mista buscam mesclar as diferentes técnicas comentadas acima, para tirar proveito de diferentes perfis de transações. Assim, o escalonador pode tomar a melhor decisão de execução de acordo com o perfil de execução das transações.
+As técnicas baseadas em heurísticas mista buscam mesclar as diferentes técnicas comentadas acima, para tirar proveito de diferentes perfis de transações. Assim, o escalonador pode tomar a melhor decisão de execução de acordo com o perfil de execução das transações.  Um exemplo de escalonador que utiliza técnicas reativas é conhecido como \emph{LUTS}.
+
+O escalonador \emph{Lightweight User-Transaction Scheduler}~(LUTS), apresentado em \cite{nicacio13}, permite a modificação de sua estratégia de escalonamento de forma dinâmica, para isto, este avalia a duração das transações. O \emph{LUTS} utiliza um conjunto de \emph{threads}, com tamanho igual ao número de núcleos disponivel na arquitetura em que será utilizado.
+
+As transações são agrupadas por \emph{IDs}, onde, todas as transações geradas pelo mesmo bloco de código possuem o mesmo \emph{ID}. O escalonador utiliza o tempo médio das últimas 100 transações confirmadas. Se o tempo médio estiver abaixo de um limite de tempo pré definido, o escalonador serializa as transações com base na intensidade de contenção, assim como feito no escalonador ATS. Porém, o LUTS mantém o valor de \emph{IC} por \emph{ID} de transação.
+
+Quando a média de transações está acima do limite, o escalonador armazena a probabilidade de conflito para cada \emph{ID} de transação em uma estrutura de dados. Quando uma \emph{thread} fica disponível, o escalonador lê os \emph{IDs} de todas as transações em execução e as informações das estruturas de dados para selecionar a transação com menor probabilidade de conflito. A probabilidade de conflito de um ID é incrementada quando uma transação confirmada e decrementada toda vez que uma transação for abortada.
 
 \subsection{Técnicas baseadas em Aprendizado de Máquina}
 
