@@ -250,7 +250,11 @@ Em tempo de execução, o escalonador executa um \emph{loop} contínuo para regu
 
 \subsection{Técnicas Baseada em Modelos Analíticos}
 
-As técnicas baseadas em modelos analíticos utilizam modelos construídos por equações matemáticas para tomada de decisão do escalonador. Assim, esta técnica tem como entrada de uma função analitica a base de dados da transação, na qual a saída da função será utilizada para moldar o modelo utilizado.
+As técnicas baseadas em modelos analíticos utilizam modelos construídos por equações matemáticas para tomada de decisão do escalonador. Assim, esta técnica tem como entrada de uma função analitica a base de dados da transação, na qual a saída da função será utilizada para moldar o modelo utilizado. Um exemplo de escalonador baseado em modelo  analítico é denominado \emph{CSR-STM}.
+
+O escalonador \emph{Concurrency Self-Regulating }~(CSR-STM), apresentado em \cite{sanzo13}, utiliza uma técnica analítica baseada em modelo, onde, o esquema básico de escalonamento é semelhante ao visto no \emph{SAC-STM}. Assim, o número de \emph{threads} ativos é regulado com base no rendimento da aplicação.
+
+O CSR-STM ao contrário do SAC-STM não utiliza RNA, porém, utiliza um modelo de desempenho analítico para estimar a probabilidade de conflitos da transação. Este modelo analitico pode ser personalizado de acordo com aplicação e especificação da máquina utilizada.
 
 \subsection{Técnica baseada em Modelos Mistos}
 
