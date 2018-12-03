@@ -235,7 +235,18 @@ Quando a média de transações está acima do limite, o escalonador armazena a 
 
 \subsection{Técnicas baseadas em Aprendizado de Máquina}
 
-As técnicas baseadas em aprendizado de máquina utilizam modelos de desempenho. A partir de um conjunto de dados que representa o perfil das transações, o algoritmo aplica monta uma rede de aprendizado para formular as relações do modelo de desempenho. Assim, o escalonador utiliza o modelo de desempenho como função de entrada para tomada de decisão.
+As técnicas baseadas em aprendizado de máquina utilizam modelos de desempenho. A partir de um conjunto de dados que representa o perfil das transações, o algoritmo aplica monta uma rede de aprendizado para formular as relações do modelo de desempenho. Assim, o escalonador utiliza o modelo de desempenho como função de entrada para tomada de decisão. Um exemplo de escalonador baseado em aprendizado de máquina é conhecido como \emph{SAC-STM}.
+
+O escalonador \emph{Self-Adjusting Concurrency STM}~(SAC-STM), apresentado em \cite{rughetti12}, utiliza Rede Neural Artificial (RNA) para gerar modelos de desempenho que serão usados em sua tomada de decisão. Uma RNA é um modelo de aprendizado de máquina que permite aproximar uma função por meio de um processo de treinamento. É utilizado o RNA para estimar o tempo médio de transações por meio de uma função de perfil, utilizando carga de trabalho e número de \emph{threads} simultâneas.
+
+Em tempo de execução, o escalonador executa um \emph{loop} contínuo para regular o número de \emph{threads} ativos. Para cada etapa do \emph{loop} são executadas as seguintes ações:
+
+\begin{enumerate}
+ \item Coleta as amostras de carga de trabalho nas últimas n transações;
+ \item Utiliza a RNA para estimar os tempos esperados de transação em variação de k para k<=M, onde, k é o recurso de entrada e M é o número de \emph{threads};
+ \item Calcula com base nos tempos esperados o rendimento esperado na variação de k;
+ \item Mantém k0 \emph{threads} ativos, onde k0 é o número de \emph{threads} para os quais a taxa de transferência é estimada como mais alta.
+\end{enumerate}
 
 \subsection{Técnicas Baseada em Modelos Analíticos}
 
