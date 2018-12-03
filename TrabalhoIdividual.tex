@@ -258,7 +258,11 @@ O CSR-STM ao contrário do SAC-STM não utiliza RNA, porém, utiliza um modelo d
 
 \subsection{Técnica baseada em Modelos Mistos}
 
-As técnicas baseadas em modelos mistos buscam mesclar as técnicas baseadas em modelo já apresentadas. Essa técnica busca avaliar o comportamento das transações previamente e utilizar estratégias mistas para criar o melhor modelo para o escalonador tomar suas decisões.
+As técnicas baseadas em modelos mistos buscam mesclar as técnicas baseadas em modelo já apresentadas. Essa técnica busca avaliar o comportamento das transações previamente e utilizar estratégias mistas para criar o melhor modelo para o escalonador tomar suas decisões. Um exemplo de escalonador baseado em modelo  misto é o \emph{AML}.
+
+O escalonador \emph{Analytical/Machine Learning}~(AML), apresentado em \cite{rughetti14}, é baseado em modelos mistos que usa o modelo analítico visto em CSR-STM e o aprendizado de máquina visto em SAC-STM. O escalonador busca obter o melhor dos dois modelos, assim, utiliza a fase leve de perfil da carga de trabalho do modelo analitico e a estimatica de alto desempenho das RNAs.
+
+O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobrem um subconjunto do domínio dos recursos de entrada. Em seguida, é gerado um único conjunto de dados com amostras reais e virtuais, este conjunto é utilizado para treinar a RNA. Com isto, o escalonador então obtém estimativas de desempenho mais confiáveis para tomada de decisão.
 
 \chapter{Escalonadores NUMA}
 
