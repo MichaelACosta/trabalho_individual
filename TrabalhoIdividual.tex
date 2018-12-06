@@ -44,7 +44,17 @@
 
 %Resumo em Portugues (no maximo 500 palavras)
 \begin{abstract}
-  ...
+
+Memórias Transacionais (TM) são apresentadas como alternativas à sincronização com \emph{locks} e monitores. As Memórias Transacionais permitem ao programador escrever programas paralelos em mais alto nível, reduzindo a complexidade da sincronização. Porém, com o aumento do paralelismo existe um aumento na contenção gerando maior número de conflitos, estas transações conflitantes causam \emph{aborts}, ou seja, o cancelamento destas transações que serão executadas no futuro.
+
+Como solução ao problema de contenção, as bibliotecas de TM tratam operações conflitantes mas não evita que o \emph{abort} ocorra, assim, degradando o desempenho de execução de programas com a utilização do processamento de forma fútil. Esta característica torna-se mais agravante quando aplicada às arquiteturas \emph{NUMA} \emph{(Non-Uniform Memory Access)} devido às diferentes latências de acesso à memória.
+
+As arquiteturas \emph{NUMA} têm a vantagem de adicionar mais processadores sem aumentar o gargalo de acesso ao barramento, a sua principal característica está no tempo de acesso não uniforme à memória, ou seja, o custo para um determinado processador acessar uma memória não é o mesmo custo que este tem para acessar outra.
+
+Trabalhos recentes voltados a TM utilizam técnicas para reduzir a contenção e alto índice de \emph{aborts} e otimizar a execução de aplicações com TMs. Estes trabalhos exploram o uso de gerenciadores de conflitos, escalonadores e heurísticas para tomada de decisão. Porém, os algoritmos não exploram a arquitetura como parâmetro para tomada de decisão.
+
+Este trabalho apresenta uma revisão dos principais conceitos de memórias transacionais, arquitetura UMA e arquitetura NUMA. Também apresenta uma revisão dos trabalhos de escalonadores de STM. Este estudo ajuda a avaliar heurísticas distintas de escalonamento para extendelas a arquiteturas NUMA.
+
 \end{abstract}
 
 \begin{englishabstract}%
