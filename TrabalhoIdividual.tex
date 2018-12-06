@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc} % acentuacao
 \usepackage{graphicx} % para inserir figuras
 \usepackage[T1]{fontenc}
+\usepackage{subfigure}
 \usepackage{todo}
 \usepackage{amssymb}
 
@@ -255,6 +256,36 @@ As técnicas baseadas em modelos mistos buscam mesclar as técnicas baseadas em 
 O escalonador \emph{Analytical/Machine Learning}~(AML), apresentado em \cite{rughetti14}, é baseado em modelos mistos que usa o modelo analítico visto em CSR-STM e o aprendizado de máquina visto em SAC-STM. O escalonador busca obter o melhor dos dois modelos, assim, utiliza a fase leve de perfil da carga de trabalho do modelo analitico e a estimatica de alto desempenho das RNAs.
 
 O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobrem um subconjunto do domínio dos recursos de entrada. Em seguida, é gerado um único conjunto de dados com amostras reais e virtuais, este conjunto é utilizado para treinar a RNA. Com isto, o escalonador então obtém estimativas de desempenho mais confiáveis para tomada de decisão.
+
+\chapter{Arquiteturas NUMA e UMA}
+
+Dependendo da localização física da memória em relação aos processadores, o tempo de acesso a uma posição de memória pode ser uniforme ou não. Surge então as arquiteturas denominadas de \emph{UMA~(Uniform Memory Access)} e \emph{NUMA~(Non Uniform Memory Access)} \cite{carissimi07}.
+
+Máquinas \emph{NUMA} possui a vantagem de agregar maior paralelismo ao adicionar mais processadores sem aumentar o número de conflitos e o gargalo de acesso ao barramento. Sua arquitetura é feita para que os processadores não utilizem o mesmo barramento de acesso à memória como é feito em arquiteturas \emph{UMA}.
+
+As arquiteturas \emph{NUMA} possuem múltiplos núcleos dispostos em conjuntos de processadores (Nodos), a memória é fisicamente composta por vários bancos de memória, podendo estar cada um deles vinculados a um Nodo e a um espaço de endereçamento compartilhado. Nesse caso, quando o processador acessa à memória que está vinculada a si, diz-se que houve um acesso local. Se o acesso for à memória de outro processador, diz-se que ocorreu um acesso remoto.
+
+Os acessos remotos são mais lentos que os acessos locais, uma vez que é necessário passar pela rede de interconexão para que se consiga chegar ao dado localizado na memória remota \cite{rodolfo14}. A Figura~\ref{arquiteturas_config} ilustra de maneira genérica, \ref{uma_fig} uma máquina de arquitetura \emph{UMA} e \ref{numa_fig} uma máquina de arquitetura \emph{NUMA}. Pode-se observar que, na arquitetura \emph{UMA} representada na Figura~\ref{uma_fig}, às operações relacionadas à memória (leituras e escritas), independente da unidade de processamento \emph{(P0, P1, ..., Pn)} que estão partindo, possuem o mesmo tempo de acesso, pois todos acessam a memória utilizando o mesmo caminho.
+
+Já na Figura~\ref{numa_fig}, existem dois possíveis e distintos caminhos para acessar à memória, dependendo de qual unidade de processamento irá partir o acesso e da localização física da memória a ser acessada: (i) Acesso Local (\emph{P2} acessando à memória \emph{M2}) e (ii) Acesso Remoto (\emph{P2} acessando à memória \emph{M1}). Os tempos de acessos à memória local de um processador, tanto para leitura quanto para escrita de dados e instruções, são menores do que os tempos de acessos às memórias remotas. Neste tipo de arquitetura, os acessos a memória ocorrem de maneira não uniforme, essas assimetrias no acesso caracterizam este tipo de arquitetura.
+
+\begin{figure}[!htp]
+\centering
+\subfigure[Arquitetura UMA]{
+ \label{uma_fig}
+ \includegraphics[height=6cm]{Imagens/UMA.png}
+}
+\subfigure[Arquitetura NUMA]{
+ \label{numa_fig}
+ \includegraphics[height=6cm]{Imagens/NUMA.png}
+}
+\caption{Configuração das arquiteturas UMA e NUMA. Fonte:~\cite{rodolfo14}}
+\label{arquiteturas_config}
+\end{figure}
+
+O custo não uniforme de acesso à memória é importante para o desempenho de uma aplicação, pois este pode oferecer desvantagens quando não forem avaliados. Uma forma bastante comum de medir a não uniformidade de acessos à memória nas arquiteturas assimétricas, é considerar a razão entre o acesso a uma posição de memória remota e um acesso a uma posição de memória local. Esta razão é denominada fator \emph{NUMA}, uma máquina pode apresentar diferentes valores para o fator \emph{NUMA}, dependendo de quais memórias serão acessadas pelos processadores. Portanto, para que uma aplicação execute de forma eficiente é desejável que os processos sejam escalonados próximos a faixa de endereçamento que eles acessam, assim reduzindo o fator \emph{NUMA}.
+
+É importante conhecer as características da arquitetura \emph{NUMA}, principalmente a latência de acesso às memórias remotas. Estas informações servem de subsídio ao desenvolvedor para que este consiga definir estratégias de escalonamento de tarefas mais eficientes para aplicações que executam neste tipo de arquitetura.
 
 \chapter{Discussões}
 
