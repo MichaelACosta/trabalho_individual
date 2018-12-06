@@ -258,7 +258,13 @@ O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobre
 
 \chapter{Discussões}
 
+Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados a memórias transacionais com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
 
+Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, desde avaliar o histórico de transação a utilização de aprendizado de máquina para aproximar a melhor curva de execução de STM, assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
+
+Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Mas não consideram o uso de STMs em arquiteturas NUMA, desta forma não consideram o conceito do fator NUMA, onde a latência de acesso a memória pode causar overhead acima do esperado em uma execução.
+
+Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas vista no trabalho \cite{sanzo17}. Este trabalho permite avaliar as metodologias já propostas de escalonamento STM para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
 
 \chapter{Conclusão}
 
