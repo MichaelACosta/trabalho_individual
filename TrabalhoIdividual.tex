@@ -60,7 +60,17 @@ Este trabalho apresenta uma revisão dos principais conceitos de memórias trans
 \begin{englishabstract}%
   {Transacional Memory}% {Titulo do Trabalho em Ingles}
 
-  ...
+Transactional Memory (TM) are shown as an alternative at synchronization with locks and monitors. Transactional Memory allows the programmer to write parallel programs, reducing synchronization details that are shown to the programmer. However, with the increase of the parallelism exist an increase at contention generating a larger number of conflicts, this transaction conflicting cause aborts, that is, the cancellation these transactions will be replayed in the future.
+
+As a solution the problem of contention, the library of TM dealing operations conflicting, but not prevents that the abort occurs, so, degrades the performance of execution of the program with the use of the processing of futile way. This characteristic becomes more aggravated when applied the architecture NUMA (Nom-Uniform Memory Access) due to the different latencies of access to memory.
+
+The architecture NUMA has the advantage of adding more processor without increase the bottleneck of access the bus, your characteristic main is in access time non-uniform to memory, that is, the cost for a determined processor access a memory not is the same cost it has for access other.
+
+Recent TM works use techniques to reduce the contention and high level of aborts and optimize the execution of applications with TM. These works explore the use of conflict managers, schedulers and heuristics at doing a decision. However, the algorithms do not explore the architecture as a parameter to doing the decision.
+
+This work shows a review of main concepts at transactional memory, architecture UMA and architecture NUMA. Also, show a review of STM schedulers work. This study helps to evaluate different heuristics of schedulers to extends using architecture NUMA.
+
+
 \end{englishabstract}
 
 %Lista de Figuras
