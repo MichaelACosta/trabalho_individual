@@ -1,16 +1,15 @@
-\documentclass[ti]{texufpel} %use tid para doutorado e ti para mestrado
-
-\usepackage[utf8]{inputenc} % acentuacao
-\usepackage{graphicx} % para inserir figuras
+\documentclass[ti]{texufpel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage{subfigure}
 \usepackage{todo}
 \usepackage{amssymb}
 
 \hypersetup{
-    hidelinks, % Remove coloração e caixas
-    unicode=true,   %Permite acentuação no bookmark
-    linktoc=all %Habilita link no nome e página do sumário
+    hidelinks,
+    unicode=true,
+    linktoc=all
 }
 
 \unidade{Centro de Desenvolvimento Tecnológico}
@@ -24,7 +23,7 @@
 \coadvisor[Prof.~Dr.]{Pilla}{Mauricio Lima}
 
 %Palavras-chave em PT_BR
-\keyword{Memótia Transacional}
+\keyword{Memória Transacional}
 \keyword{NUMA}
 \keyword{UMA}
 \keyword{Escalonamento}
@@ -42,7 +41,6 @@
 
 \sloppy
 
-%Resumo em Portugues (no maximo 500 palavras)
 \begin{abstract}
 
 Memórias Transacionais (TM) são apresentadas como alternativas à sincronização com \emph{locks} e monitores. As Memórias Transacionais permitem ao programador escrever programas paralelos em mais alto nível, reduzindo a complexidade da sincronização. Porém, com o aumento do paralelismo existe um aumento na contenção gerando maior número de conflitos, estas transações conflitantes causam \emph{aborts}, ou seja, o cancelamento destas transações que serão executadas no futuro.
@@ -57,8 +55,8 @@ Este trabalho apresenta uma revisão dos principais conceitos de memórias trans
 
 \end{abstract}
 
-\begin{englishabstract}%
-  {Transacional Memory}% {Titulo do Trabalho em Ingles}
+\begin{englishabstract}
+  {Transacional Memory}
 
 Transactional Memory (TM) are shown as an alternative at synchronization with locks and monitors. Transactional Memory allows the programmer to write parallel programs, reducing synchronization details that are shown to the programmer. However, with the increase of the parallelism exist an increase at contention generating a larger number of conflicts, this transaction conflicting cause aborts, that is, the cancellation these transactions will be replayed in the future.
 
@@ -73,13 +71,8 @@ This work shows a review of main concepts at transactional memory, architecture 
 
 \end{englishabstract}
 
-%Lista de Figuras
 \listoffigures
 
-%Lista de Tabelas
-\listoftables
-
-%lista de abreviaturas e siglas
 \begin{listofabbrv}{SPMD}
         \item[ATS] Adaptive Transactional Scheduling
         \item[STM] Software Transactional Memory
