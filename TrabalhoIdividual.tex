@@ -65,18 +65,24 @@
         \item[STM] Software Transactional Memory
         \item[TM] Transactional Memory
         \item[NUMA] Non-Uniform Memory Access
+        \item[UMA] Uniform Memory Access
 \end{listofabbrv}
 
-%Sumario
 \tableofcontents
 
 \chapter{Introdução}
 
- ...
+As arquiteturas paralelas são praticamente onipresentes nas plataformas computacionais modernas. Processadores convencionais com múltiplos núcleos são usados para construção de computadores domésticos e supercomputadores. O paralelismo desses processadores tendem a crescer com o passar dos anos, pois o aumento de desempenho dos computadores atuais tem se baseado no desenvolvimento de arquiteturas paralelas.
 
-\section{Uma subseção}
+Para que as aplicações possam extrair o melhor desempenho das arquiteturas paralelas, o código deve explorar ao máximo o poder computacional oferecido pelas diversas unidades de processamento, porém, a programação paralela está longe de ser uma atividade trivial. O acesso à memória compartilhada é um dos cuidados que programadores devem tomar ao desenvolver aplicativos para máquinas multi-core, para isto, as linguagens fornecem mecanismos de sincronização como \emph{locks} e \emph{mutex}, este modelo de programação é difícil e propenso a erros. Visando reduzir a dificuldade no desenvolvimento de programas confiáveis para este tipo de máquina, tem se como alternativa o uso de Memórias Transacionais.
 
-  ...
+Memórias Transacionais~(TM) são mecanismos de sincronização que realizam execuções atômicas e isoladas de partes compartilhadas do código. Na programação utilizando \emph{Software Transactional Memory}~(STM), o acesso à memória compartilhada é realizado dentro de uma transação executada atomicamente~\cite{teixeira15}. A programação com STM permite que o programador não se preocupe com as aquisições e liberações de \emph{locks}, este deverá delimitar apenas as seções críticas, o que facilita a programação.
+
+As arquiteturas \emph{NUMA} (\emph{Non-Uniform Memory Access}) surgiram como alternativa às limitações de escalabilidade sofridas pelas arquiteturas \emph{UMA} (\emph{Uniform Memory Access}). As arquiteturas \emph{NUMA} possuem múltiplos processadores, compostos por vários núcleos e blocos de memória dedicados, a sua principal característica é o custo de tempo diferente para o acesso à memória~\cite{rodolfo14}.
+
+Com o aumento do paralelismo existente nas arquiteturas atuais há um aumento no número de contenção, ocasionando conflitos e \emph{aborts} nas STMs. Estudos de STM buscam utilizar escalonadores para reduzir o número de conflitos e otimizar tempo de execução. Porém ao estudos recentes de escalonadores de STM tem como foco apenas arquiteturas UMA.
+
+Este trabalho apresenta os principais trabalhos relacionado a escalonadores de STM com base nas categorias apresentadas em \cite{sanzo17}. Este trabalho realizou um estudo sobre os escalonadores de STM com foco de determinar as atuais heurísticas utilizadas em STM, assim como revisou as principais característica de arquiteturas UMA e NUMA.
 
 \chapter{Memória Transacional}
 
