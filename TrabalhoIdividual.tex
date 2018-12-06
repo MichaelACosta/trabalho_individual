@@ -22,7 +22,6 @@
 \advisor[Prof.~Dr.]{Du Bois}{André Rauber}
 \coadvisor[Prof.~Dr.]{Pilla}{Mauricio Lima}
 
-
 %Palavras-chave em PT_BR
 \keyword{Memótia Transacional}
 \keyword{NUMA}
@@ -78,8 +77,6 @@
 
   ...
 
-%---------------------------------------------------------------------------------------------------%
-%---------------------------------------------------------------------------------------------------%
 \chapter{Memória Transacional}
 
 Memória Transacional, ou \emph{Transactional Memory}~(TM), é uma classe de mecanismos de sincronização que fornece uma execução atômica e isolada de alterações em um conjunto de dados compartilhados. Estas estão sendo desenvolvidas para que no futuro tornem-se o principal meio de fazer a sincronização em um programa concorrente, substituindo a sincronização baseada em \emph{locks}~\cite{herlihy06}. As TMs podem ser implementadas em \emph{software} (STM), em \emph{hardware} (HTM) ou ainda em uma versão híbrida de \emph{hardware} e \emph{software}.
@@ -88,7 +85,6 @@ Na programação utilizando STMs, todo o acesso à memória compartilhada é rea
 
 A principal vantagem na programação usando STM é que o programador apenas delimita as seções criticas e não é necessário preocupar-se com a aquisição e liberação de \emph{locks}. Os \emph{locks}, quando utilizados de forma incorreta, podem levar a problemas como \emph{deadlocks}~\cite{bandeira10}.
 
-%---------------------------------------------------------------------------------------------------%
 \section{Propriedades}
 
 Transação é uma sequência finita de escritas e leituras na memória executada por uma \emph{thread}~\cite{herlihy93}, e deve satisfazer três propriedades:
@@ -101,7 +97,6 @@ Transação é uma sequência finita de escritas e leituras na memória executad
  \item \textbf{Isolamento}: as transações não interferem nas execuções de outras transações, assim parecendo que elas são executadas serialmente. Uma transação não observa o estado intermediário de outra.
 \end{itemize}
 
-%---------------------------------------------------------------------------------------------------%
 \section{Versionamento de Dados}
 
 O versionamento de dados faz é responsável pelo gerenciamento das versões dos dados. Ele armazena tanto o valor do dado no início de uma transação como também o valor do dado modificado durante a transação, isso para garantir a propriedade de atomicidade~\cite{baldassinTese09}.
@@ -121,7 +116,6 @@ Existem dois tipos de versionamento de dados:
  \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} na transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
 \end{itemize}
 
-%---------------------------------------------------------------------------------------------------%
 \section{Detecção de Conflito}
 
 Mecanismos de detecção de conflitos verificam a existência de operações conflitantes durante uma transação. Um conflito ocorre quando duas transações estão acessando um mesmo dado na memória e pelo menos uma das transações está fazendo uma operação de escrita~\cite{baldassinTese09}.
@@ -154,8 +148,6 @@ Da mesma forma que o versionamento de dados, a detecção de conflito também po
 
 Para solucionar o problema de qual transação continuará executando, quando ocorre um conflito, é utilizado um gerenciador de contenção~\cite{harris10}. O gerenciador de contenção é o responsável por decidir quando e qual transação vai ser abortada, isso para garantir que a execução do programa prossiga sem problemas.
 
-%---------------------------------------------------------------------------------------------------%
-%---------------------------------------------------------------------------------------------------%
 \chapter{Escalonamento de STM}
 
   A bibliografia de STM apresenta um gama distinta e extensa de estratégias de escalonamento. Estas diferem-se devido as distintas características de aplicações encontradas. Nas quais podem apresentar maior ou menor nível de contenção, diferentes read-sets e write-sets, entre outras características.
@@ -264,38 +256,15 @@ O escalonador \emph{Analytical/Machine Learning}~(AML), apresentado em \cite{rug
 
 O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobrem um subconjunto do domínio dos recursos de entrada. Em seguida, é gerado um único conjunto de dados com amostras reais e virtuais, este conjunto é utilizado para treinar a RNA. Com isto, o escalonador então obtém estimativas de desempenho mais confiáveis para tomada de decisão.
 
-\chapter{Escalonadores NUMA}
-
-  ...
-
-
-\chapter{Escalonamento de Transações aplicado à NUMA}
-
-  ...
-
-
 \chapter{Discussões}
 
-  ...
 
 
 \chapter{Conclusão}
 
   ...
 
-% Bibliografia
-% http://liinwww.ira.uka.de/bibliography/index.html
-% um site que cataloga no formato bibtex a bibliografia em computacao
-%\bibliography{nomedoarquivo.bib} (sem extensao)
-%\bibliographystyle{formato.bst} (sem extensao)
-
 \bibliography{bibliografia}
 \bibliographystyle{abnt}
-
-% Anexos (Opcional)
-\annex
-\chapter{Um Anexo}
-
-  ...
 
 \end{document}
