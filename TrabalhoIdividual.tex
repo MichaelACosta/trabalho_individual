@@ -299,7 +299,13 @@ Este trabalho apresentou uma visão atual sobre os principais trabalhos relacion
 
 \chapter{Conclusão}
 
-  ...
+O trabalho teve como objetivo principal revisar as principais técnicas de escalonadores STM atuais. Também foram revisados os conceitos de memórias transacionais e arquiteturas UMA e NUMA. Com isto, podemos avaliar abordagens já realizadas para reproduzir e comparar em diferentes arquiteturas.
+
+As técnicas revisadas e descritas são desenvolvidas para o uso de STMs em arquiteturas UMA. Estas visam tirar o melhor proveito de STM e otimizar a execução, reduzindo conflitos e distribuindo de maneira eficiente a carga de trabalho. Este objetivo pode ser obtido com uso de técnicas distintas, onde, algumas mesclam recursos para tirar otimizar os escalonadores.
+
+Estas técnicas são voltadas para a arquitetura UMA, e portanto, não consideram as latências de acesso a memória e não apresentam seu desempenho perante estas arquiteturas. Trabalhos vistos como o ATS e Shrink disponibilizam seus algoritmos, permitindo a realização de testes em trabalhos futuros.
+
+Para trabalhos futuros pretende-se avaliar as diferentes abordagens de escalonamento em arquiteturas NUMA comparadas com as arquiteturas UMA. Também pretende-se estender os trabalhos vistos, para o uso de STMs em arquiteturas NUMA, onde será considerado a latência de acesso a memória com um fator chave para o escalonador.
 
 \bibliography{bibliografia}
 \bibliographystyle{abnt}
