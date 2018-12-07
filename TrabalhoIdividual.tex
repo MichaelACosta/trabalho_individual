@@ -229,7 +229,7 @@ O conjunto de gravação é previsto apenas para reiniciar as transações, pres
 Visando reduzir o \emph{overhead} de execução, o escalonador \emph{Shrink} entra em ação para um \emph{thread} apenas quando sua taxa de sucesso de transação está abaixo de um limite de sucesso.
 
 
-\subsection{Técnicas Reativas}
+\subsection{Técnica Reativa}
 
 As técnicas reativas adotam uma estratégia onde o escalonador entra em ação após uma transação ser abortada, isso busca evitar conflitos repetidos. Esta estratégia baseia-se na suposição de que os dados acessados por uma transação abortada tem a possibilidade de serem os mesmos acessados durante sua reexecução, ocasionando novo conflito com a transação ainda em execução. Um exemplo de escalonador que utiliza técnicas reativas é conhecido como \emph{CAR-STM}.
 
@@ -243,7 +243,7 @@ O \emph{CAR-STM} também possui a opção de escalonamento proativo, onde o esca
 
 \subsection{Técnica baseada em Heurística Mista}
 
-As técnicas baseadas em heurísticas mista buscam mesclar as diferentes técnicas comentadas acima, para tirar proveito de diferentes perfis de transações. Assim, o escalonador pode tomar a melhor decisão de execução de acordo com o perfil de execução das transações.  Um exemplo de escalonador que utiliza técnicas reativas é conhecido como \emph{LUTS}.
+As técnicas baseadas em heurística mista buscam mesclar as diferentes técnicas comentadas acima, para tirar proveito de diferentes perfis de transações. Assim, o escalonador pode tomar a melhor decisão de execução de acordo com o perfil de execução das transações.  Um exemplo de escalonador que utiliza técnicas reativas é conhecido como \emph{LUTS}.
 
 O escalonador \emph{Lightweight User-Transaction Scheduler}~(LUTS), apresentado em \cite{nicacio13}, permite a modificação de sua estratégia de escalonamento de forma dinâmica, para isto, este avalia a duração das transações. O \emph{LUTS} utiliza um conjunto de \emph{threads}, com tamanho igual ao número de núcleos disponivel na arquitetura em que será utilizado.
 
@@ -251,7 +251,7 @@ As transações são agrupadas por \emph{IDs}, onde, todas as transações gerad
 
 Quando a média de transações está acima do limite, o escalonador armazena a probabilidade de conflito para cada \emph{ID} de transação em uma estrutura de dados. Quando uma \emph{thread} fica disponível, o escalonador lê os \emph{IDs} de todas as transações em execução e as informações das estruturas de dados para selecionar a transação com menor probabilidade de conflito. A probabilidade de conflito de um ID é incrementada quando uma transação confirmada e decrementada toda vez que uma transação for abortada.
 
-\subsection{Técnicas baseadas em Aprendizado de Máquina}
+\subsection{Técnica baseada em Aprendizado de Máquina}
 
 As técnicas baseadas em aprendizado de máquina utilizam modelos de desempenho. A partir de um conjunto de dados que representa o perfil das transações, o algoritmo aplica monta uma rede de aprendizado para formular as relações do modelo de desempenho. Assim, o escalonador utiliza o modelo de desempenho como função de entrada para tomada de decisão. Um exemplo de escalonador baseado em aprendizado de máquina é conhecido como \emph{SAC-STM}.
 
@@ -266,7 +266,7 @@ Em tempo de execução, o escalonador executa um \emph{loop} contínuo para regu
  \item Mantém k0 \emph{threads} ativos, onde k0 é o número de \emph{threads} para os quais a taxa de transferência é estimada como mais alta.
 \end{enumerate}
 
-\subsection{Técnicas Baseada em Modelos Analíticos}
+\subsection{Técnicas baseada em Modelos Analíticos}
 
 As técnicas baseadas em modelos analíticos utilizam modelos construídos por equações matemáticas para tomada de decisão do escalonador. Assim, esta técnica tem como entrada de uma função analitica a base de dados da transação, na qual a saída da função será utilizada para moldar o modelo utilizado. Um exemplo de escalonador baseado em modelo  analítico é denominado \emph{CSR-STM}.
 
@@ -314,23 +314,27 @@ O custo não uniforme de acesso à memória é importante para o desempenho de u
 
 \chapter{Discussões}
 
-Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados a memórias transacionais com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
+Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados à memórias transacionais, com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
 
-Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, desde avaliar o histórico de transação a utilização de aprendizado de máquina para aproximar a melhor curva de execução de STM, assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
+Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, como avaliar o histórico de transação e utilizar aprendizado de máquina para aproximar a melhor curva de execução de STM. Assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
 
-Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Mas não consideram o uso de STMs em arquiteturas NUMA, desta forma não consideram o conceito do fator NUMA, onde a latência de acesso a memória pode causar overhead acima do esperado em uma execução.
+Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Entretanto, não consideram o uso de STMs em arquiteturas NUMA, desta forma não avaliam o conceito do fator NUMA, onde a latência de acesso à memória pode causar \emph{overhead} acima do esperado em uma execução.
 
-Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas vista no trabalho \cite{sanzo17}. Este trabalho permite avaliar as metodologias já propostas de escalonamento STM para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
+Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas e heurísticas vistas no trabalho \cite{sanzo17}. O trabalho desenvolvido permite estudar as metodologias de escalonamento de STM já propostas para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
 
 \chapter{Conclusão}
 
 O trabalho teve como objetivo principal revisar as principais técnicas de escalonadores STM atuais. Também foram revisados os conceitos de memórias transacionais e arquiteturas UMA e NUMA. Com isto, podemos avaliar abordagens já realizadas para reproduzir e comparar em diferentes arquiteturas.
 
-As técnicas revisadas e descritas são desenvolvidas para o uso de STMs em arquiteturas UMA. Estas visam tirar o melhor proveito de STM e otimizar a execução, reduzindo conflitos e distribuindo de maneira eficiente a carga de trabalho. Este objetivo pode ser obtido com uso de técnicas distintas, onde, algumas mesclam recursos para tirar otimizar os escalonadores.
+As técnicas revisadas e descritas são desenvolvidas para o uso de STMs em arquiteturas UMA. Estas visam tirar o melhor proveito de STM e otimizar a execução, reduzindo conflitos e distribuindo de maneira eficiente a carga de trabalho. Este objetivo pode ser obtido com uso de técnicas distintas, onde, algumas mesclam recursos para otimizar os escalonadores.
 
-Estas técnicas são voltadas para a arquitetura UMA, e portanto, não consideram as latências de acesso a memória e não apresentam seu desempenho perante estas arquiteturas. Trabalhos vistos como o ATS e Shrink disponibilizam seus algoritmos, permitindo a realização de testes em trabalhos futuros.
+Estas técnicas são voltadas para a arquitetura UMA, e portanto, não consideram as latências de acesso à memória. Porém, trabalhos vistos como o ATS e Shrink disponibilizam seus algoritmos, permitindo a realização de testes e extensão dos trabalhos.
 
-Para trabalhos futuros pretende-se avaliar as diferentes abordagens de escalonamento em arquiteturas NUMA comparadas com as arquiteturas UMA. Também pretende-se estender os trabalhos vistos, para o uso de STMs em arquiteturas NUMA, onde será considerado a latência de acesso a memória com um fator chave para o escalonador.
+O escalonador ATS serializa as transações por meio de uma fila após o nível de contenção atingir um limite predefinido, assim, o escalonador atua após os conflitos ocorrerem. Este escalonador considera apenas os conflitos para tomada de decisão não considerando a arquitetura na qual a aplicação executa.
+
+O escalonador Shrink é implementado em nível de usuário, onde é utilizado dois tipo de heurística para a detecção do nível de contenção. A primeira tem como foco transações pequenas, enquanto a segunda trata conflitos em transações grandes. Este escalonador avalia o tamanho das transações e a quantidade de conflitos ocorridos, descartando também a arquitetura utilizada.
+
+Para trabalhos futuros pretende-se avaliar as diferentes abordagens de escalonamento em arquiteturas NUMA comparadas com as arquiteturas UMA. Também pretende-se estender os trabalhos vistos, para o uso de STMs em arquiteturas NUMA, onde será considerado a latência de acesso à memória com um fator chave para o escalonador.
 
 \bibliography{bibliografia}
 \bibliographystyle{abnt}
