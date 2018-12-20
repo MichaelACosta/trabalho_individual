@@ -282,7 +282,17 @@ O escalonador \emph{Analytical/Machine Learning}~(AML), apresentado em \cite{rug
 
 O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobrem um subconjunto do domínio dos recursos de entrada. Em seguida, é gerado um único conjunto de dados com amostras reais e virtuais, este conjunto é utilizado para treinar a RNA. Com isto, o escalonador então obtém estimativas de desempenho mais confiáveis para tomada de decisão.
 
-\chapter{Arquiteturas NUMA e UMA}
+\chapter{Discussões}
+
+Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados à memórias transacionais, com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
+
+Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, como avaliar o histórico de transação e utilizar aprendizado de máquina para aproximar a melhor curva de execução de STM. Assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
+
+Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Entretanto, não consideram o uso de STMs em arquiteturas NUMA, desta forma não avaliam o conceito do fator NUMA, onde a latência de acesso à memória pode causar \emph{overhead} acima do esperado em uma execução.
+
+% Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas e heurísticas vistas no trabalho \cite{sanzo17}. O trabalho desenvolvido permite estudar as metodologias de escalonamento de STM já propostas para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
+
+\subsection{Arquiteturas UMA e NUMA}
 
 Dependendo da localização física da memória em relação aos processadores, o tempo de acesso a uma posição de memória pode ser uniforme ou não. Surge então as arquiteturas denominadas de \emph{UMA~(Uniform Memory Access)} e \emph{NUMA~(Non Uniform Memory Access)} \cite{carissimi07}.
 
@@ -311,16 +321,6 @@ Já na Figura~\ref{numa_fig}, existem dois possíveis e distintos caminhos para 
 O custo não uniforme de acesso à memória é importante para o desempenho de uma aplicação, pois este pode oferecer desvantagens quando não forem avaliados. Uma forma bastante comum de medir a não uniformidade de acessos à memória nas arquiteturas assimétricas, é considerar a razão entre o acesso a uma posição de memória remota e um acesso a uma posição de memória local. Esta razão é denominada fator \emph{NUMA}, uma máquina pode apresentar diferentes valores para o fator \emph{NUMA}, dependendo de quais memórias serão acessadas pelos processadores. Portanto, para que uma aplicação execute de forma eficiente é desejável que os processos sejam escalonados próximos a faixa de endereçamento que eles acessam, assim reduzindo o fator \emph{NUMA}.
 
 É importante conhecer as características da arquitetura \emph{NUMA}, principalmente a latência de acesso às memórias remotas. Estas informações servem de subsídio ao desenvolvedor para que este consiga definir estratégias de escalonamento de tarefas mais eficientes para aplicações que executam neste tipo de arquitetura.
-
-\chapter{Discussões}
-
-Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados à memórias transacionais, com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
-
-Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, como avaliar o histórico de transação e utilizar aprendizado de máquina para aproximar a melhor curva de execução de STM. Assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
-
-Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Entretanto, não consideram o uso de STMs em arquiteturas NUMA, desta forma não avaliam o conceito do fator NUMA, onde a latência de acesso à memória pode causar \emph{overhead} acima do esperado em uma execução.
-
-Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas e heurísticas vistas no trabalho \cite{sanzo17}. O trabalho desenvolvido permite estudar as metodologias de escalonamento de STM já propostas para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
 
 \chapter{Conclusão}
 
