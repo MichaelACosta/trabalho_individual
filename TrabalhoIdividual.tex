@@ -43,15 +43,15 @@
 
 \begin{abstract}
 
-Memórias Transacionais (TM) são apresentadas como alternativas à sincronização com \emph{locks} e monitores. As Memórias Transacionais permitem ao programador escrever programas paralelos em mais alto nível, reduzindo a complexidade da sincronização. Porém, com o aumento do paralelismo existe um aumento na contenção gerando maior número de conflitos, estas transações conflitantes causam \emph{aborts}, ou seja, o cancelamento destas transações que serão executadas no futuro.
+Memórias Transacionais (MT) são apresentadas como alternativa à sincronização com \emph{locks} e monitores. As Memórias Transacionais permitem ao programador escrever programas paralelos em mais alto nível, reduzindo a complexidade da sincronização. Porém, com o aumento do paralelismo proporcionado pelas MTs existe um aumento na contenção gerando maior número de conflitos, estas transações conflitantes causam \emph{aborts}, ou seja, o cancelamento destas transações que serão executadas no futuro.
 
-Como solução ao problema de contenção, as bibliotecas de TM tratam operações conflitantes mas não evita que o \emph{abort} ocorra, assim, degradando o desempenho de execução de programas com a utilização do processamento de forma fútil. Esta característica torna-se mais agravante quando aplicada às arquiteturas \emph{NUMA} \emph{(Non-Uniform Memory Access)} devido às diferentes latências de acesso à memória.
+Como solução ao problema de contenção, as bibliotecas de MT tratam operações conflitantes mas não evitam que o \emph{abort} ocorra, assim, degradando o desempenho de execução de programas com a utilização do processamento de forma fútil. Esta característica torna-se mais agravante quando aplicada às arquiteturas \emph{NUMA} \emph{(Non-Uniform Memory Access)} devido às diferentes latências de acesso à memória.
 
-As arquiteturas \emph{NUMA} têm a vantagem de adicionar mais processadores sem aumentar o gargalo de acesso ao barramento, a sua principal característica está no tempo de acesso não uniforme à memória, ou seja, o custo para um determinado processador acessar uma memória não é o mesmo custo que este tem para acessar outra.
+As arquiteturas \emph{NUMA} têm a vantagem de adicionar mais processadores sem aumentar o gargalo de acesso ao barramento, a sua principal característica está no tempo de acesso não uniforme à memória, ou seja, o custo para um determinado processador acessar uma área de memória não é o mesmo custo que este tem para acessar outra.
 
-Trabalhos recentes voltados a TM utilizam técnicas para reduzir a contenção e alto índice de \emph{aborts} e otimizar a execução de aplicações com TMs. Estes trabalhos exploram o uso de gerenciadores de conflitos, escalonadores e heurísticas para tomada de decisão. Porém, os algoritmos não exploram a arquitetura como parâmetro para tomada de decisão.
+Trabalhos recentes voltados a MT utilizam técnicas para reduzir a contenção e alto índice de \emph{aborts} e otimizar a execução de aplicações com MTs. Estes trabalhos exploram o uso de gerenciadores de conflitos, escalonadores e heurísticas para tomada de decisão. Porém, os algoritmos não exploram a arquitetura como parâmetro para tomada de decisão.
 
-Este trabalho apresenta uma revisão dos principais conceitos de memórias transacionais, arquitetura UMA e arquitetura NUMA. Também apresenta uma revisão dos trabalhos de escalonadores de STM. Este estudo ajuda a avaliar heurísticas distintas de escalonamento para extendelas a arquiteturas NUMA.
+Este trabalho apresenta uma revisão dos principais conceitos de memórias transacionais, arquitetura UMA e arquitetura NUMA. Também apresenta uma revisão dos trabalhos de escalonadores de \emph{Software Transactional Memory}~(STM). Este estudo ajuda a avaliar heurísticas distintas de escalonamento para extendelas a arquiteturas NUMA.
 
 \end{abstract}
 
@@ -79,11 +79,11 @@ This work shows a review of main concepts at transactional memory, architecture 
   \item[CI] Contention Intensity
   \item[CSR] Concurrency Self-Regulating
   \item[LUTS] Lightweight User-Transaction Scheduler
+  \item[MT] Transactional Memory
   \item[NUMA] Non-Uniform Memory Access
   \item[PSCM] Gerenciamento de Prevenção de Serialização Permanente
   \item[SAC] Self-Adjusting Concurrency
   \item[STM] Software Transactional Memory
-  \item[TM] Transactional Memory
   \item[UMA] Uniform Memory Access
 \end{listofabbrv}
 
@@ -91,21 +91,21 @@ This work shows a review of main concepts at transactional memory, architecture 
 
 \chapter{Introdução}
 
-As arquiteturas paralelas são praticamente onipresentes nas plataformas computacionais modernas. Processadores convencionais com múltiplos núcleos são usados para construção de computadores domésticos e supercomputadores. O paralelismo desses processadores tendem a crescer com o passar dos anos, pois o aumento de desempenho dos computadores atuais tem se baseado no desenvolvimento de arquiteturas paralelas.
+As arquiteturas paralelas são praticamente onipresentes nas plataformas computacionais modernas. Processadores convencionais com múltiplos núcleos são usados para construção de computadores domésticos, supercomputadores, celulares, etc. O paralelismo desses processadores tendem a crescer com o passar dos anos, pois o aumento de desempenho dos computadores atuais tem se baseado no desenvolvimento de arquiteturas paralelas.
 
-Para que as aplicações possam extrair o melhor desempenho das arquiteturas paralelas, o código deve explorar ao máximo o poder computacional oferecido pelas diversas unidades de processamento, porém, a programação paralela está longe de ser uma atividade trivial. O acesso à memória compartilhada é um dos cuidados que programadores devem tomar ao desenvolver aplicativos para máquinas multi-core, para isto, as linguagens fornecem mecanismos de sincronização como \emph{locks} e \emph{mutex}, este modelo de programação é difícil e propenso a erros. Visando reduzir a dificuldade no desenvolvimento de programas confiáveis para este tipo de máquina, tem se como alternativa o uso de Memórias Transacionais.
+Para que as aplicações possam extrair o melhor desempenho das arquiteturas paralelas, o código deve explorar ao máximo o poder computacional oferecido pelas diversas unidades de processamento, porém, a programação paralela está longe de ser uma atividade trivial. O acesso à memória compartilhada é um dos cuidados que programadores devem tomar ao desenvolver aplicativos para máquinas multi-core, para isto, as linguagens fornecem mecanismos de sincronização como \emph{locks} e \emph{mutex}. Este modelo de programação é difícil e propenso a erros. Visando reduzir a dificuldade no desenvolvimento de programas confiáveis para este tipo de máquina, tem se como alternativa o uso de Memórias Transacionais.
 
-Memórias Transacionais~(TM) são mecanismos de sincronização que realizam execuções atômicas e isoladas de partes compartilhadas do código. Na programação utilizando \emph{Software Transactional Memory}~(STM), o acesso à memória compartilhada é realizado dentro de uma transação executada atomicamente~\cite{teixeira15}. A programação com STM permite que o programador não se preocupe com as aquisições e liberações de \emph{locks}, este deverá delimitar apenas as seções críticas, o que facilita a programação.
+Memórias Transacionais~(MT) são mecanismos de sincronização que realizam execuções atômicas e isoladas de partes compartilhadas do código. Na programação utilizando \emph{Software Transactional Memory}~(STM), o acesso à memória compartilhada é realizado dentro de uma transação executada atomicamente~\cite{teixeira15}. A programação com STM permite que o programador não se preocupe com as aquisições e liberações de \emph{locks}, este deverá delimitar apenas as seções críticas, o que facilita a programação.
 
 As arquiteturas \emph{NUMA} (\emph{Non-Uniform Memory Access}) surgiram como alternativa às limitações de escalabilidade sofridas pelas arquiteturas \emph{UMA} (\emph{Uniform Memory Access}). As arquiteturas \emph{NUMA} possuem múltiplos processadores, compostos por vários núcleos e blocos de memória dedicados, a sua principal característica é o custo de tempo diferente para o acesso à memória~\cite{rodolfo14}.
 
-Com o aumento do paralelismo existente nas arquiteturas atuais há um aumento no número de contenção, ocasionando conflitos e \emph{aborts} nas STMs. Estudos de STM buscam utilizar escalonadores para reduzir o número de conflitos e otimizar tempo de execução. Porém ao estudos recentes de escalonadores de STM tem como foco apenas arquiteturas UMA.
+Com o aumento do paralelismo existente nas arquiteturas atuais há um aumento na contenção, ocasionando conflitos e \emph{aborts} nas STMs. Estudos de STM buscam utilizar escalonadores para reduzir o número de conflitos e otimizar tempo de execução. Porém estudos recentes de escalonadores de STM tem como foco apenas arquiteturas UMA.
 
 Este trabalho apresenta os principais trabalhos relacionado a escalonadores de STM com base nas categorias apresentadas em \cite{sanzo17}. Este trabalho realizou um estudo sobre os escalonadores de STM com foco de determinar as atuais heurísticas utilizadas em STM, assim como revisou as principais característica de arquiteturas UMA e NUMA.
 
 \chapter{Memória Transacional}
 
-Memória Transacional, ou \emph{Transactional Memory}~(TM), é uma classe de mecanismos de sincronização que fornece uma execução atômica e isolada de alterações em um conjunto de dados compartilhados. Estas estão sendo desenvolvidas para que no futuro tornem-se o principal meio de fazer a sincronização em um programa concorrente, substituindo a sincronização baseada em \emph{locks}~\cite{herlihy06}. As TMs podem ser implementadas em \emph{software} (STM), em \emph{hardware} (HTM) ou ainda em uma versão híbrida de \emph{hardware} e \emph{software}.
+Memória Transacional, ou \emph{Transactional Memory}~(MT), é uma classe de mecanismos de sincronização que fornece uma execução atômica e isolada de alterações em um conjunto de dados compartilhados. Estas estão sendo desenvolvidas para que no futuro tornem-se o principal meio de fazer a sincronização em um programa concorrente, substituindo a sincronização baseada em \emph{locks}~\cite{herlihy06}. As MTs podem ser implementadas em \emph{software} (STM), em \emph{hardware} (HTM) ou ainda em uma versão híbrida de \emph{hardware} e \emph{software}.
 
 Na programação utilizando STMs, todo o acesso à memória compartilhada é realizado dentro de transações e todas as transações são executadas atomicamente em relação a transações concorrentes.
 
@@ -118,7 +118,7 @@ Transação é uma sequência finita de escritas e leituras na memória executad
 \begin{itemize}
  \item \textbf{Atomicidade}: cada transação faz uma sequência de mudanças provisórias na memória compartilhada. Quando a transação é concluída, pode ocorrer um \emph{commit}, tornando suas mudanças visíveis a outras \emph{threads} instantaneamente, ou pode ocorrer um \emph{abort}, fazendo com que suas alterações sejam descartadas;
 
- \item \textbf{Consistência}: as transações devem garantir que um sistema consistente deve ser mantido consistente. Esta propriedade esta relacionada com o conceito de invariância;
+ \item \textbf{Consistência}: as transações devem garantir que um sistema consistente deve ser mantido consistente;
 
  \item \textbf{Isolamento}: as transações não interferem nas execuções de outras transações, assim parecendo que elas são executadas serialmente. Uma transação não observa o estado intermediário de outra.
 \end{itemize}
@@ -139,7 +139,7 @@ Existem dois tipos de versionamento de dados:
 \begin{itemize}
  \item \textbf{Versionamento Adiantado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(a), o valor modificado durante a transação é armazenado direto na memória e o valor inicial é armazenado em um \emph{undo log}, para que no caso de cancelamento na transação o valor inicial seja restaurado na memória.
 
- \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} na transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
+ \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} da transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
 \end{itemize}
 
 \section{Detecção de Conflito}
