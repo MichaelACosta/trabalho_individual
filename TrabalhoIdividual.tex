@@ -5,11 +5,12 @@
 \usepackage{subfigure}
 \usepackage{todo}
 \usepackage{amssymb}
+\usepackage{pifont}
 
 \hypersetup{
-    hidelinks,
-    unicode=true,
-    linktoc=all
+   hidelinks,
+   unicode=true,
+   linktoc=all
 }
 
 \unidade{Centro de Desenvolvimento Tecnológico}
@@ -51,12 +52,12 @@ As arquiteturas \emph{NUMA} têm a vantagem de adicionar mais processadores sem 
 
 Trabalhos recentes voltados a MT utilizam técnicas para reduzir a contenção e alto índice de \emph{aborts} e otimizar a execução de aplicações com MTs. Estes trabalhos exploram o uso de gerenciadores de conflitos, escalonadores e heurísticas para tomada de decisão. Porém, os algoritmos não exploram a arquitetura como parâmetro para tomada de decisão.
 
-Este trabalho apresenta uma revisão dos principais conceitos de memórias transacionais, arquitetura UMA e arquitetura NUMA. Também apresenta uma revisão dos trabalhos de escalonadores de \emph{Software Transactional Memory}~(STM). Este estudo ajuda a avaliar heurísticas distintas de escalonamento para extendelas a arquiteturas NUMA.
+Este trabalho apresenta uma revisão dos principais conceitos de memórias transacionais, arquitetura UMA e arquitetura NUMA. Também apresenta uma revisão dos trabalhos de escalonadores de \emph{Software Transactional Memory}~(STM). Este estudo ajuda a avaliar heurísticas distintas de escalonamento para aplicar em arquiteturas NUMA.
 
 \end{abstract}
 
 \begin{englishabstract}
-  {A Study About Transactional Memory Scheduler}
+ {A Study About Transactional Memory Scheduler}
 
 Transactional Memory (TM) are shown as an alternative at synchronization with locks and monitors. Transactional Memory allows the programmer to write parallel programs, reducing synchronization details that are shown to the programmer. However, with the increase of the parallelism exist an increase at contention generating a larger number of conflicts, this transaction conflicting cause aborts, that is, the cancellation these transactions will be replayed in the future.
 
@@ -73,18 +74,20 @@ This work shows a review of main concepts at transactional memory, architecture 
 
 \listoffigures
 
+\listoftables
+
 \begin{listofabbrv}{SPMD}
-  \item[ATS] Adaptive Transactional Scheduling
-  \item[BSCM] Basic Seraling Contention Management
-  \item[CI] Contention Intensity
-  \item[CSR] Concurrency Self-Regulating
-  \item[LUTS] Lightweight User-Transaction Scheduler
-  \item[MT] Transactional Memory
-  \item[NUMA] Non-Uniform Memory Access
-  \item[PSCM] Gerenciamento de Prevenção de Serialização Permanente
-  \item[SAC] Self-Adjusting Concurrency
-  \item[STM] Software Transactional Memory
-  \item[UMA] Uniform Memory Access
+ \item[ATS] Adaptive Transactional Scheduling
+ \item[BSCM] Basic Seraling Contention Management
+ \item[CI] Contention Intensity
+ \item[CSR] Concurrency Self-Regulating
+ \item[LUTS] Lightweight User-Transaction Scheduler
+ \item[MT] Transactional Memory
+ \item[NUMA] Non-Uniform Memory Access
+ \item[PSCM] Gerenciamento de Prevenção de Serialização Permanente
+ \item[SAC] Self-Adjusting Concurrency
+ \item[STM] Software Transactional Memory
+ \item[UMA] Uniform Memory Access
 \end{listofabbrv}
 
 \tableofcontents
@@ -109,18 +112,18 @@ Memória Transacional, ou \emph{Transactional Memory}~(MT), é uma classe de mec
 
 Na programação utilizando STMs, todo o acesso à memória compartilhada é realizado dentro de transações e todas as transações são executadas atomicamente em relação a transações concorrentes.
 
-A principal vantagem na programação usando STM é que o programador apenas delimita as seções criticas e não é necessário preocupar-se com a aquisição e liberação de \emph{locks}. Os \emph{locks}, quando utilizados de forma incorreta, podem levar a problemas como \emph{deadlocks}~\cite{bandeira10}.
+A principal vantagem na programação usando STM é que o programador apenas delimita as seções críticas e não é necessário preocupar-se com a aquisição e liberação de \emph{locks}. Os \emph{locks}, quando utilizados de forma incorreta, podem levar a problemas como \emph{deadlocks}~\cite{bandeira10}.
 
 \section{Propriedades}
 
 Transação é uma sequência finita de escritas e leituras na memória executada por uma \emph{thread}~\cite{herlihy93}, e deve satisfazer três propriedades:
 
 \begin{itemize}
- \item \textbf{Atomicidade}: cada transação faz uma sequência de mudanças provisórias na memória compartilhada. Quando a transação é concluída, pode ocorrer um \emph{commit}, tornando suas mudanças visíveis a outras \emph{threads} instantaneamente, ou pode ocorrer um \emph{abort}, fazendo com que suas alterações sejam descartadas;
+\item \textbf{Atomicidade}: cada transação faz uma sequência de mudanças provisórias na memória compartilhada. Quando a transação é concluída, pode ocorrer um \emph{commit}, tornando suas mudanças visíveis a outras \emph{threads} instantaneamente, ou pode ocorrer um \emph{abort}, fazendo com que suas alterações sejam descartadas;
 
- \item \textbf{Consistência}: as transações devem garantir que um sistema consistente deve ser mantido consistente;
+\item \textbf{Consistência}: as transações devem garantir que um sistema consistente deve ser mantido consistente;
 
- \item \textbf{Isolamento}: as transações não interferem nas execuções de outras transações, assim parecendo que elas são executadas serialmente. Uma transação não observa o estado intermediário de outra.
+\item \textbf{Isolamento}: as transações não interferem nas execuções de outras transações, assim parecendo que elas são executadas serialmente. Uma transação não observa o estado intermediário de outra.
 \end{itemize}
 
 \section{Versionamento de Dados}
@@ -137,9 +140,9 @@ O versionamento de dados faz é responsável pelo gerenciamento das versões dos
 Existem dois tipos de versionamento de dados:
 
 \begin{itemize}
- \item \textbf{Versionamento Adiantado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(a), o valor modificado durante a transação é armazenado direto na memória e o valor inicial é armazenado em um \emph{undo log}, para que no caso de cancelamento na transação o valor inicial seja restaurado na memória.
+\item \textbf{Versionamento Adiantado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(a), o valor modificado durante a transação é armazenado direto na memória e o valor inicial é armazenado em um \emph{undo log}, para que no caso de cancelamento na transação o valor inicial seja restaurado na memória.
 
- \item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} da transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
+\item \textbf{Versionamento Atrasado}: como pode ser visto na Figura~\ref{figuraVersionamento}~(b) neste versionamento o valor modificado durante a transação é armazenado em um \emph{buffer} e o valor inicial é mantido na memória até que aconteça um \emph{commit} da transação, onde o valor armazenado no \emph{buffer} é escrito na memória. Caso aconteça o cancelamento na transação, o valor do \emph{buffer} é descartado.
 \end{itemize}
 
 \section{Detecção de Conflito}
@@ -149,9 +152,9 @@ Mecanismos de detecção de conflitos verificam a existência de operações con
 Da mesma forma que o versionamento de dados, a detecção de conflito também pode ser de dois tipos:
 
 \begin{itemize}
- \item \textbf{Detecção de Conflitos Adiantado}: ocorrem no momento em que duas transações acessam um mesmo dado e uma delas faz uma operação de escrita. Essa operação de escrita é detectada e então uma transação é abortada. Neste tipo de detecção pode ocorrer o problema chamado de \emph{livelock}, quando duas transações ficam cancelando-se, desta forma, a execução do programa não progride. A Figura~\ref{figuradeteccaoadiantado} mostra como é feita a detecção de conflitos adiantado.
+\item \textbf{Detecção de Conflitos Adiantado}: ocorrem no momento em que duas transações acessam um mesmo dado e uma delas faz uma operação de escrita. Essa operação de escrita é detectada e então uma transação é abortada. Neste tipo de detecção pode ocorrer o problema chamado de \emph{livelock}, quando duas transações ficam cancelando-se, desta forma, a execução do programa não progride. A Figura~\ref{figuradeteccaoadiantado} mostra como é feita a detecção de conflitos adiantado.
 
- O Caso~1, mostra a execução sem conflitos, onde as duas transações são executadas sem problemas. Já o Caso~2, mostra o que acontece quando ocorre um conflito, onde T1 lê A e logo depois T2 escreve em A, então o conflito é detectado e T1 é abortada, após ser efetivada T2, a transação T1 consegue ler A sem problema de conflito. Por fim o Caso~3 mostra a situação de \emph{livelock}, onde as duas transações tentam ler e escrever em A, assim as duas acabam sempre se abortando.
+O Caso~1, mostra a execução sem conflitos, onde as duas transações são executadas sem problemas. Já o Caso~2, mostra o que acontece quando ocorre um conflito, onde T1 lê A e logo depois T2 escreve em A, então o conflito é detectado e T1 é abortada, após ser efetivada T2, a transação T1 consegue ler A sem problema de conflito. Por fim o Caso~3 mostra a situação de \emph{livelock}, onde as duas transações tentam ler e escrever em A, assim as duas acabam sempre se abortando.
 
 \begin{figure}[!htp]
 \centering
@@ -160,9 +163,9 @@ Da mesma forma que o versionamento de dados, a detecção de conflito também po
 \label{figuradeteccaoadiantado}
 \end{figure}
 
- \item \textbf{Detecção de Conflitos Atrasado}: Este tipo de detecção de conflito ocorre no final da transação.  Antes da transação ser efetuada, é verificado se ocorreu um conflito. Caso tenha ocorrido, a transação é cancelada, senão é efetivada. Para transações muito grandes não é recomendado este tipo de detecção, pois uma transação grande pode ser abortada várias vezes por transações pequenas, assim gastando tempo de processamento desnecessário, este problema se chama \emph{starvation}. A Figura~\ref{figuradeteccaoatrasado} mostra como é feita a detecção de conflitos atrasado.
+\item \textbf{Detecção de Conflitos Atrasado}: Este tipo de detecção de conflito ocorre no final da transação.  Antes da transação ser efetuada, é verificado se ocorreu um conflito. Caso tenha ocorrido, a transação é cancelada, senão é efetivada. Para transações muito grandes não é recomendado este tipo de detecção, pois uma transação grande pode ser abortada várias vezes por transações pequenas, assim gastando tempo de processamento desnecessário, este problema se chama \emph{starvation}. A Figura~\ref{figuradeteccaoatrasado} mostra como é feita a detecção de conflitos atrasado.
 
- O Caso~1, mostra as transações acessando dados diferentes, não ocasionando conflitos. No Caso~2, T2 lê A que é escrita por T1. A T2 só nota o conflito quando T1 é efetivado. Logo depois de notar o conflito T2 é abortada. No Caso~3 não ocorre nenhum conflito, pois T1 lê A antes de T2 escrever. O Caso~4 mostra a situação em que, após ser cancelada, T1 volta a executar.
+O Caso~1, mostra as transações acessando dados diferentes, não ocasionando conflitos. No Caso~2, T2 lê A que é escrita por T1. A T2 só nota o conflito quando T1 é efetivado. Logo depois de notar o conflito T2 é abortada. No Caso~3 não ocorre nenhum conflito, pois T1 lê A antes de T2 escrever. O Caso~4 mostra a situação em que, após ser cancelada, T1 volta a executar.
 \end{itemize}
 
 \begin{figure}[!htp]
@@ -176,17 +179,17 @@ Para solucionar o problema de qual transação continuará executando, quando oc
 
 \chapter{Escalonamento de STM}
 
-  A bibliografia de STM apresenta um gama distinta e extensa de estratégias de escalonamento. Estas diferem-se devido as distintas características de aplicações encontradas. Nas quais podem apresentar maior ou menor nível de contenção, diferentes read-sets e write-sets, entre outras características.
+ A bibliografia de STM apresenta um gama distinta e extensa de estratégias de escalonamento. Estas diferem-se devido as distintas características de aplicações encontradas. Nas quais podem apresentar maior ou menor nível de contenção, diferentes read-sets e write-sets, entre outras características.
 
-  Os algoritmos de escalonamento visam otimizar o tempo de execução. Para isto devem inserir o menor \emph{overhead} possível no código propondo uma estratégia eficiente para as características do problema abordado.
+ Os algoritmos de escalonamento visam otimizar o tempo de execução. Para isto devem inserir o menor \emph{overhead} possível no código propondo uma estratégia eficiente para as características do problema abordado.
 
-  Os escalonadores de STM estudados na bibliografia caracterizam-se por executar o escalonamento em dois níveis distintos. Os dois níveis buscam reduzir o tempo de execução e garantir a execução do programa. Estes escalonamentos de STM são o escalonamento de \emph{threads} e de transações.
+ Os escalonadores de STM estudados na bibliografia caracterizam-se por executar o escalonamento em dois níveis distintos. Os dois níveis buscam reduzir o tempo de execução e garantir a execução do programa. Estes escalonamentos de STM são o escalonamento de \emph{threads} e de transações.
 
-  O escalonamento de \emph{threads}, busca executar sua tomada de decisão sobre as \emph{threads} ativas no programa, podendo adicionar mais \emph{threads}, remove-las, ou migra-las entre os \emph{cores}.
+ O escalonamento de \emph{threads}, busca executar sua tomada de decisão sobre as \emph{threads} ativas no programa, podendo adicionar mais \emph{threads}, remove-las, ou migra-las entre os \emph{cores}.
 
-  O escalonamento de transações, busca executar sua tomada de decisão sobre as transações do programa, estas podem estar em execução, já terem sido abortadas, ou serem a próxima a executar.
+ O escalonamento de transações, busca executar sua tomada de decisão sobre as transações do programa, estas podem estar em execução, já terem sido abortadas, ou serem a próxima a executar.
 
-  As tomadas de decisões dos escalonadores citados acima se dá a partir de outras características. Estas avaliam de forma diferente os dados para a tomada de decisão, assim como, podem efetuar operações distintas conforme suas premissas de escalonamento.
+ As tomadas de decisões dos escalonadores citados acima se dá a partir de outras características. Estas avaliam de forma diferente os dados para a tomada de decisão, assim como, podem efetuar operações distintas conforme suas premissas de escalonamento.
 
 \section{Características e Técnicas}
 
@@ -258,10 +261,10 @@ O escalonador \emph{Self-Adjusting Concurrency STM}~(SAC-STM), apresentado em \c
 Em tempo de execução, o escalonador executa um \emph{loop} contínuo para regular o número de \emph{threads} ativos. Para cada etapa do \emph{loop} são executadas as seguintes ações:
 
 \begin{enumerate}
- \item Coleta as amostras de carga de trabalho nas últimas n transações;
- \item Utiliza a RNA para estimar os tempos esperados de transação em variação de k para k<=M, onde, k é o recurso de entrada e M é o número de \emph{threads};
- \item Calcula com base nos tempos esperados o rendimento esperado na variação de k;
- \item Mantém k0 \emph{threads} ativos, onde k0 é o número de \emph{threads} para os quais a taxa de transferência é estimada como mais alta.
+\item Coleta as amostras de carga de trabalho nas últimas n transações;
+\item Utiliza a RNA para estimar os tempos esperados de transação em variação de k para k<=M, onde, k é o recurso de entrada e M é o número de \emph{threads};
+\item Calcula com base nos tempos esperados o rendimento esperado na variação de k;
+\item Mantém k0 \emph{threads} ativos, onde k0 é o número de \emph{threads} para os quais a taxa de transferência é estimada como mais alta.
 \end{enumerate}
 
 \subsection{Técnicas baseada em Modelos Analíticos}
@@ -280,17 +283,34 @@ O escalonador \emph{Analytical/Machine Learning}~(AML), apresentado em \cite{rug
 
 O escalonador utiliza o modelo analítico para gerar amostras virtuais que cobrem um subconjunto do domínio dos recursos de entrada. Em seguida, é gerado um único conjunto de dados com amostras reais e virtuais, este conjunto é utilizado para treinar a RNA. Com isto, o escalonador então obtém estimativas de desempenho mais confiáveis para tomada de decisão.
 
-\chapter{Discussões}
+\chapter{Conclusão}
 
 Os artigos revisados neste trabalho apresentam diferentes formas de escalonamentos voltados à memórias transacionais, com foco na redução de conflitos e otimização de desempenho. Estes algoritmos abordam técnicas com características distintas nas tomadas de decisão, porém, todos são voltados para o uso de STM em arquiteturas UMA.
+
+A Tabela~\ref{tabelaTecnicas} mostra a relação de escalonadores, suas técnicas utilizadas e por fim as arquiteturas onde foram validadas. Todos escalonadores estudados são voltados para arquiteturas UMA, assim, não sendo executados testes considerando a arquitetura NUMA e suas características.
+
+\begin{table}[h]
+\centering
+\caption{Relação entre técnicas vistas e arquiteturas utilizadas}
+\label{tabelaTecnicas}
+\begin{tabular}{l|l|l|l}
+ Escalonadores & Técnicas & UMA & NUMA \\
+ \hline
+ ATS & Feedback & \ding{51} & \ding{53} \\
+ Shrink & Previsão & \ding{51} & \ding{53} \\
+ CAR-STM & Reativa & \ding{51} & \ding{53} \\
+ LUTS & Heurística Mista & \ding{51} & \ding{53} \\
+ SAC-STM & Aprendizado de Máquina & \ding{51} & \ding{53} \\
+ CSR-STM & Modelo Analítico & \ding{51} & \ding{53} \\
+ AML & Modelo Misto & \ding{51} & \ding{53}
+\end{tabular}
+\end{table}
 
 Os trabalhos descritos mesclam diferentes abordagens para diminuir conflitos, como avaliar o histórico de transação e utilizar aprendizado de máquina para aproximar a melhor curva de execução de STM. Assim, é possível por meio do escalonador tomar decisões como serializar transações conflitantes, utilizar mais ou menos threads simultâneas ou acordar a transação com menor probabilidade de conflito.
 
 Estas característica maximizam a execução de transações em arquiteturas UMA, para a qual os algoritmos de STMs foram projetados. Entretanto, não consideram o uso de STMs em arquiteturas NUMA, desta forma não avaliam o conceito do fator NUMA, onde a latência de acesso à memória pode causar \emph{overhead} acima do esperado em uma execução.
 
-% Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas e heurísticas vistas no trabalho \cite{sanzo17}. O trabalho desenvolvido permite estudar as metodologias de escalonamento de STM já propostas para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
-
-\subsection{Arquiteturas UMA e NUMA}
+\section{Arquiteturas UMA e NUMA}
 
 Dependendo da localização física da memória em relação aos processadores, o tempo de acesso a uma posição de memória pode ser uniforme ou não. Surge então as arquiteturas denominadas de \emph{UMA~(Uniform Memory Access)} e \emph{NUMA~(Non Uniform Memory Access)} \cite{carissimi07}.
 
@@ -305,12 +325,12 @@ Já na Figura~\ref{numa_fig}, existem dois possíveis e distintos caminhos para 
 \begin{figure}[!htp]
 \centering
 \subfigure[Arquitetura UMA]{
- \label{uma_fig}
- \includegraphics[height=6cm]{Imagens/UMA.png}
+\label{uma_fig}
+\includegraphics[height=6cm]{Imagens/UMA.png}
 }
 \subfigure[Arquitetura NUMA]{
- \label{numa_fig}
- \includegraphics[height=6cm]{Imagens/NUMA.png}
+\label{numa_fig}
+\includegraphics[height=6cm]{Imagens/NUMA.png}
 }
 \caption{Configuração das arquiteturas UMA e NUMA. Fonte:~\cite{rodolfo14}}
 \label{arquiteturas_config}
@@ -320,17 +340,29 @@ O custo não uniforme de acesso à memória é importante para o desempenho de u
 
 É importante conhecer as características da arquitetura \emph{NUMA}, principalmente a latência de acesso às memórias remotas. Estas informações servem de subsídio ao desenvolvedor da aplicação para que este consiga definir estratégias mais eficientes para aplicações que executam neste tipo de arquitetura.
 
-\chapter{Conclusão}
+\section{Discussão}
+
+Este trabalho apresentou uma visão atual sobre os principais trabalhos relacionados a escalonadores de STMs, utilizando a divisão de técnicas e heurísticas vistas no trabalho \cite{sanzo17}. O trabalho desenvolvido permite estudar as metodologias de escalonamento de STM já propostas para mensurar qual a melhor abordagem a ser utilizada em trabalhos futuros.
+
+Também foi abordado no trabalho conceitos relacionados a arquiteturas UMA e NUMA. Verificando nos trabalhos relacionados qual a arquitetura utilizada em seus teste, suas heurísticas implementadas e suas técnicas de escalonamentos.
+
+Os trabalhos vistos utilizam para validação de testes as arquiteturas UMA, não considerando na heurística e técnica de escalonamento conceitos da arquitetura para tomada de decisão.
+
+Os escalonadores visam avaliar as características das transações para tomada de decisão de forma autônoma, porém, configurações detalhadas sobre características da arquitetura e modelagem da coleta de dados por vezes fica a cargo do desenvolvedor da aplicação, o que insere maior complexidade na programação paralela.
+
+Avaliar a arquitetura utilizada como tomada de decisão em escalonadores STM podem permitir uma melhor distribuição das transações e reduzir a latência de acesso à memória em arquiteturas NUMA.
+
+Trabalhos como \cite{rodolfo14} avaliam o fator NUMA em tempo de execução para tomada de decisão na alocação de recursos, isto visa reduzir o impacto gerado pelas diferentes latências de acesso à memória em arquiteturas NUMA.
+
+Escalonadores STM permitem inserir premissas que validem características de diferentes arquiteturas para reduzir \emph{overhead} de escalonamento, taxa de conflitos e alto custo de acesso à memória.
+
+\section{Trabalhos Futuros}
 
 O trabalho teve como objetivo principal revisar as principais técnicas de escalonadores STM atuais. Também foram revisados os conceitos de memórias transacionais e arquiteturas UMA e NUMA. Com isto, podemos avaliar abordagens já realizadas para reproduzir e comparar em diferentes arquiteturas.
 
 As técnicas revisadas e descritas são desenvolvidas para o uso de STMs em arquiteturas UMA. Estas visam tirar o melhor proveito de STM e otimizar a execução, reduzindo conflitos e distribuindo de maneira eficiente a carga de trabalho. Este objetivo pode ser obtido com uso de técnicas distintas, onde, algumas mesclam recursos para otimizar os escalonadores.
 
 Estas técnicas são voltadas para a arquitetura UMA, e portanto, não consideram as latências de acesso à memória. Porém, trabalhos vistos como o ATS e Shrink disponibilizam seus algoritmos, permitindo a realização de testes e extensão dos trabalhos.
-
-O escalonador ATS serializa as transações por meio de uma fila após o nível de contenção atingir um limite predefinido, assim, o escalonador atua após os conflitos ocorrerem. Este escalonador considera apenas os conflitos para tomada de decisão não considerando a arquitetura na qual a aplicação executa.
-
-O escalonador Shrink é implementado em nível de usuário, onde é utilizado dois tipo de heurística para a detecção do nível de contenção. A primeira tem como foco transações pequenas, enquanto a segunda trata conflitos em transações grandes. Este escalonador avalia o tamanho das transações e a quantidade de conflitos ocorridos, descartando também a arquitetura utilizada.
 
 Para trabalhos futuros pretende-se avaliar as diferentes abordagens de escalonamento em arquiteturas NUMA comparadas com as arquiteturas UMA. Também pretende-se estender os trabalhos vistos, para o uso de STMs em arquiteturas NUMA, onde será considerado a latência de acesso à memória com um fator chave para o escalonador.
 
